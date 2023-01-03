@@ -4,14 +4,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Auth/Login', [
-        'canRegister' => Route::has('register')
-    ]);
-})->name('auth.login');
+Route::name('auth.')->controller(App\Http\Controllers\AuthController::class)->group(function() {
+    Route::get('/', 'login')->name('login');
+    Route::get('/register', 'register')->name('register');
+    Route::get('/recovery', 'recovery')->name('recovery');
+});
 
-Route::get('/recovery', function () {
-    return Inertia::render('Auth/RecoveryPassword', [
-    ]);
-})->name('auth.recovery');
-
+Route::prefix('/dashboard')->name('dashboard.')->controller(App\Http\Controllers\DashboardController::class)->group(function() {
+    Route::get('/', 'index')->name('index');
+});
