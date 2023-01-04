@@ -12,4 +12,9 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard/Index', []);
     }
+
+    function production()
+    {
+        return $this->index();
+    }
 }

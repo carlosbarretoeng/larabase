@@ -12,4 +12,5 @@ Route::name('auth.')->controller(App\Http\Controllers\AuthController::class)->gr
 
 Route::prefix('/dashboard')->name('dashboard.')->controller(App\Http\Controllers\DashboardController::class)->group(function() {
     Route::get('/', 'index')->name('index');
+    Route::get('/production', 'production')->name('production');
 });

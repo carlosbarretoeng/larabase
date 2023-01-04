@@ -1,48 +1,32 @@
 <template>
-    <div class="p-4">
-        <nav class="bg-neutral-100 border border-neutral-200 px-2 py-2 mb-4 rounded-lg">
-            <div class="container flex flex-wrap items-center justify-between mx-auto h-10">
-                <Link :href="route('dashboard.index')" class="flex items-center">
-                <img v-if="$page.props.appLogo" src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9"
-                    alt="Flowbite Logo" />
-                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{ $page.props.appName }}</span>
-                </Link>
+    <nav class="bg-indigo-500 z-50 text-white fixed w-full">
+        <div class="flex flex-wrap justify-between items-center mx-auto h-16">
+            <Link :href="route('dashboard.index')" class="flex items-center">
+            <span class="self-center text-3xl pl-4 font-extrabold whitespace-nowrap">
+                {{ $page.props.appName }}
+            </span>
+            </Link>
+            <div class="flex">
+                <NavbarMenuVue class="hidden sm:inline-flex" />
+                <div class="hidden sm:inline-flex flex items-center space-x-4 ml-4 px-4 cursor-pointer hover:bg-indigo-600">
+                    <div class="font-medium text-sm text-right">
+                        <div>Carlos R. B. Júnior</div>
+                        <div class="text-sm text-gray-300">carlosbarreto.eng@gmail.com</div>
+                    </div>
+                    <img class="w-10 h-10 rounded-full"
+                        src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
+                </div>
             </div>
-        </nav>
-        <main class="grid grid-cols-1 sm:grid-cols-12 gap-4">
-            <aside class="hidden sm:inline-flex sm:col-span-2 flex flex-col gap-4">
-                <ul class="w-full font-medium text-gray-900 bg-neutral-100 border border-neutral-200 px-2 py-2 rounded-lg">
-                    <!-- <li class="py-2 px-2 w-full border-b border-gray-200"> -->
-                    <li class="py-2 px-2">
-                        <Link :href="route('dashboard.index')" class=" flex items-center">
-                            <IconVue icon="home" class="mr-2"/>
-                            Início
-                        </Link>
-                    </li>
-                    <!-- <li class="py-2 px-4 w-full border-b border-gray-200">Settings</li>
-                    <li class="py-2 px-4 w-full border-b border-gray-200">Messages</li>
-                    <li class="py-2 px-4 w-full ">Download</li> -->
-                </ul>
-                <ul class="w-full font-medium text-gray-900 bg-neutral-100 border border-neutral-200 px-2 py-2 rounded-lg">
-                    <!-- <li class="py-2 px-2 w-full border-b border-gray-200"> -->
-                    <li class="py-2 px-2">
-                        <Link :href="route('dashboard.index')" class=" flex items-center">
-                            <IconVue icon="home" class="mr-2"/>
-                            Início
-                        </Link>
-                    </li>
-                    <!-- <li class="py-2 px-4 w-full border-b border-gray-200">Settings</li>
-                    <li class="py-2 px-4 w-full border-b border-gray-200">Messages</li>
-                    <li class="py-2 px-4 w-full ">Download</li> -->
-                </ul>
-            </aside>
-            <div class="sm:col-span-10">
-                <slot />
-            </div>
-        </main>
-    </div>
+        </div>
+    </nav>
+
+    <main class="pt-20 px-4 pb-4">
+        <slot />
+    </main>
+
 </template>
 <script setup>
+import NavbarMenuVue from '../Components/NavbarMenu.vue'
 import { Link } from '@inertiajs/inertia-vue3';
-import IconVue from '../Components/Icon.vue';
+
 </script>
