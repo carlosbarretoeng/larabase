@@ -1,15 +1,19 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::name('auth.')->controller(App\Http\Controllers\AuthController::class)->group(function() {
-    Route::get('/', 'login')->name('login');
-    Route::get('/register', 'register')->name('register');
-    Route::get('/recovery', 'recovery')->name('recovery');
-});
+Route::redirect('/', '/login');
 
-Route::prefix('/dashboard')->name('dashboard.')->controller(App\Http\Controllers\DashboardController::class)->group(function() {
-    Route::get('/', 'index')->name('index');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->name('dashboard');
+    Route::get('/dashboard/stats', 'App\Http\Controllers\DashboardController@stats')->name('dashboard.stats');
+
+    Route::middleware(['role:super-administrador'])->prefix('system')->group(function () {
+        Route::resource('/users', App\Http\Controllers\UserController::class)->names('users');
+    });
 });

@@ -1,29 +1,44 @@
 <template>
-    <div class="h-screen flex justify-center items-start pt-48">
-        <div class="w-80">
-            <CardVue class="col-span-2 grid grid-cols-1 gap-1">
-                <InputTextVue v-model="form.username_or_email" label="Usuário ou email" placeholder="usuario@empresa.com.br" required/>
-                <InputPasswordVue v-model="form.password" label="Senha" placeholder="SuaSenha" required/>
-                <ButtonVue primary label="Entrar" @navigate="'dashboard.index'"/>
-                <ButtonVue secondary label="Registrar-se" @navigate="'auth.register'" />
-                <ButtonVue light label="Recuperar Senha" @navigate="'auth.recovery'" />
-            </CardVue>
+    <BaseLayout>
+        <div class="absolute top-48 w-full">
+            <Card class="shadow-md w-80 mx-auto">
+                <template v-slot:header>
+                    <div class="text-xl font-bold uppercase text-gray-500 text-center py-2">Acesso Controlado</div>
+                </template>
+                <div class="grid grid-cols-1 gap-2">
+                    <InputText label="Usuário ou Email" v-model="form.email"/>
+                    <InputText type="password" label="Senha" v-model="form.password"/>
+                </div>
+                <template v-slot:actions>
+                    <Button label="Acessar" class="col-span-3" @click="submit()"/>
+                    <Button secondary label="Registrar" class="col-span-3" />
+                </template>
+            </Card>
         </div>
-    </div>
+    </BaseLayout>
 </template>
 <script setup>
-import ButtonVue from './../../Components/Button.vue'
-import CardVue from './../../Components/Card.vue'
-import InputPasswordVue from '../../Components/InputPassword.vue';
-import InputTextVue from '../../Components/InputText.vue';
-import { reactive } from 'vue';
+import { useForm } from '@inertiajs/inertia-vue3';
 
-const props = defineProps({
-    canRegister: Boolean
-})
+import BaseLayout from "@/Layouts/BaseLayout.vue";
 
-const form = reactive({
-    username_or_email: null,
-    password: null
-})
+import Button from '@/Components/Button.vue';
+import Card from "@/Components/Card.vue";
+import InputText from "@/Components/InputText.vue";
+
+const form = useForm({
+    email: 'super-admin@agostinitecnologia.com.br',
+    password: 'password',
+});
+
+const submit = () => {
+    form.post(
+        route('login'),
+        {
+            onFinish: () => {
+                form.reset()
+            }
+        }
+    );
+};
 </script>
