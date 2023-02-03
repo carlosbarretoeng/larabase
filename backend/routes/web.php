@@ -14,6 +14,7 @@ Route::middleware([
     Route::get('/dashboard/stats', 'App\Http\Controllers\DashboardController@stats')->name('dashboard.stats');
 
     Route::middleware(['role:super-administrador'])->prefix('system')->group(function () {
-        Route::resource('/users', App\Http\Controllers\UserController::class)->names('users');
+        Route::resource('/user', App\Http\Controllers\UserController::class)->names('user');
+        Route::resource('/empresa', App\Http\Controllers\EmpresaController::class)->names('empresa');
     });
 });

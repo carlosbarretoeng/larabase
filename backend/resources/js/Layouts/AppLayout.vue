@@ -23,8 +23,12 @@ const menus = _.compact([
         'href': route('dashboard'),
         'children': [
             {
+                'label': 'Empresas',
+                'href': route('empresa.index')
+            },
+            {
                 'label': 'Usuários',
-                'href': route('users.index')
+                'href': route('user.index')
             },
         ]
     },
@@ -69,7 +73,7 @@ const logout = () => {
                             <MenuButton class="uppercase font-bold">
                                 <Button>{{ menu.label }}</Button>
                             </MenuButton>
-                            <MenuItems class="absolute top-16 left-0 w-full bg-blue-500 grid grid-cols-5 gap-4 p-2 pt-0 z-50">
+                            <MenuItems class="absolute top-16 left-0 w-full bg-blue-500 grid grid-cols-5 gap-4 p-2 pt-2 z-50">
                                 <MenuItem v-for="(submenu, submenu_index) in menu.children" :key="submenu_index" as="template" v-slot="{ active }">
                                     <Button flat outlined :label="submenu.label" :to="submenu.href"/>
                                 </MenuItem>

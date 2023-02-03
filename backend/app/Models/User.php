@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,5 +62,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    protected $with = ['roles'];
+    protected $with = ['roles','empresa'];
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class);
+    }
 }

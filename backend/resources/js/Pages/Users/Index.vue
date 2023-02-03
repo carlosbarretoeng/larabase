@@ -26,7 +26,7 @@
                         Acessos
                     </th>
                     <th scope="col" class="hidden sm:table-cell px-6 py-3">
-                        Empresa
+                        Empresas
                     </th>
                 </tr>
             </thead>
@@ -52,13 +52,15 @@
                         </div>
                     </td>
                     <td class="hidden sm:table-cell px-6 py-4">
-                        <div v-for="(role, role_index) in user.roles" :key="role_index">
+                        <div v-for="(role, role_index) in user.roles" :key="role_index" class="text-sm">
                             {{ role.name }}
                         </div>
                     </td>
                     <td class="hidden sm:table-cell px-6 py-4">
                         <div class="flex items-center">
-                            {{ user.company ? user.company[0].name : ''}}
+                            <div v-for="(empresa, empresa_index) in user.empresas" :key="empresa_index" class="flex items-center justify-center text-sm">
+                                {{ empresa.name }}
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -143,6 +145,11 @@
             </Dialog>
         </TransitionRoot>
 
+        <hr/>
+
+        <pre>{{ $props }}</pre>
+
+
     </AppLayout>
 </template>
 <script setup>
@@ -159,7 +166,6 @@ import {
     DialogPanel,
     DialogTitle
 } from '@headlessui/vue'
-import {useForm} from "@inertiajs/inertia-vue3";
 
 const isOpen = ref(false)
 
