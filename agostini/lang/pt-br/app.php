@@ -5,6 +5,7 @@ return [
         'user' => [
             'name' => 'Nome',
             'username' => 'Usuário',
+            'password' => 'Senha',
             'email' => 'E-mail',
             'roles' => 'Acessos',
             'empresa' => 'empresa'

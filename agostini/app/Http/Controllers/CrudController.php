@@ -58,18 +58,21 @@ class CrudController extends Controller
                 return $column['showIn' . $context]['enabled'];
             });
 
-            foreach ($columns as $column_key => $column_value) {
-                $exist = array_filter($model_columns_filtered, function ($mcf) use ($column_key) {
-                    return $mcf['label'] == $column_key;
-                });
-                $columns[$column_key] = $exist ? array_pop($exist) : null;
-                if (is_null($columns[$column_key])) {
-                    unset($columns[$column_key]);
-                } else {
-                    $columns[$column_key]['translate'] = __(strtolower(str_replace('\\', '.', $this->entity)) . '.' . $columns[$column_key]['label']);
+            $model_columns_filtered_names = array_column($model_columns_filtered, 'label');
+            $columns = array_filter($columns, function ($column) use ($model_columns_filtered_names) {
+                return in_array($column['label'], $model_columns_filtered_names);
+            });
+            foreach ($model_columns_filtered as $mcf) {
+                if (!isset($columns[$mcf['label']])) {
+                    $columns[$mcf['label']] = array_merge($this->populateColumns([
+                        'label' => $mcf['label'],
+                        'translate' => __(strtolower(str_replace('\\', '.', $this->entity)) . '.' . $mcf['label'])
+                    ]), $mcf);
+                }else{
+                    $columns[$mcf['label']] = $mcf;
                 }
             }
-            $orderLabels = array_column($this->model_columns, 'label');
+            $orderLabels = array_column($model_columns_filtered, 'label');
             $newCols = [];
             foreach ($orderLabels as $orderLabel) {
                 $newOne = array_filter($columns, function ($column) use ($orderLabel) {
@@ -135,7 +138,12 @@ class CrudController extends Controller
             return $column['store'];
         });
         foreach ($columnsToStore as $column) {
-            $model[$column['label']] = $attrs[$column['label']];
+            $key = $column['label'];
+            $value = $attrs[$column['label']];
+            if ($column['type'] === 'select') {
+                continue;
+            }
+            $model[$key] = $value;
         }
         $model->save();
         return Redirect::route($this->routeName . '.index');

@@ -69,6 +69,8 @@ import {ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 
 const id = uuid.v1();
 
+const emit = defineEmits(['update'])
+
 const props = defineProps({
     label: String,
     placeholder: String,
@@ -94,8 +96,6 @@ let filteredPeople = computed(() => {
         )
     }
 )
-
-const emit = defineEmits(['update:modelValue'])
 
 const updateValue = (event) => {
     emit('update', event)

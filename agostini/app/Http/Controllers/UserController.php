@@ -19,6 +19,7 @@ class UserController extends CrudController
             [
                 'label' => 'name',
                 'type' => 'string',
+                'store' => true,
                 'showInIndex' => [
                     'enabled' => true
                 ],
@@ -29,6 +30,7 @@ class UserController extends CrudController
             [
                 'label' => 'username',
                 'type' => 'string',
+                'store' => true,
                 'showInIndex' => [
                     'enabled' => true
                 ],
@@ -39,8 +41,20 @@ class UserController extends CrudController
             [
                 'label' => 'email',
                 'type' => 'string',
+                'store' => true,
                 'showInIndex' => [
                     'enabled' => true
+                ],
+                'showInEdit' => [
+                    'enabled' => true,
+                ],
+            ],
+            [
+                'label' => 'password',
+                'type' => 'password',
+                'store' => true,
+                'showInIndex' => [
+                    'enabled' => false
                 ],
                 'showInEdit' => [
                     'enabled' => true,
@@ -50,6 +64,7 @@ class UserController extends CrudController
                 'label' => 'roles',
                 'format' => "(el) => { return el.map(e => e.name) }",
                 'type' => 'select',
+                'store' => true,
                 'options' => Role::all(['id', 'name'])->toArray(),
                 'showInIndex' => [
                     'enabled' => true,
@@ -63,6 +78,7 @@ class UserController extends CrudController
                 'label' => 'empresa',
                 'format' => "(el) => { return el.name }",
                 'type' => 'select',
+                'store' => true,
                 'options' => Empresa::all(['id', 'name'])->toArray(),
                 'showInIndex' => [
                     'enabled' => true,

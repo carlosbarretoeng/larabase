@@ -130,6 +130,7 @@
                 </div>
             </Dialog>
         </TransitionRoot>
+        <pre>{{ props }}</pre>
     </AppLayout>
 </template>
 <script setup>

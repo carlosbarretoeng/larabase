@@ -28,6 +28,13 @@
                             @update="setFormValue($event, column.label)"
                         />
                     </template>
+                    <template v-if="column.type == 'password'">
+                        <InputText
+                            type="password"
+                            :label="column.translate"
+                            v-model="form[column.label]"
+                        />
+                    </template>
                     <template v-else>
                         <InputText
                             :label="column.translate"
@@ -37,6 +44,7 @@
                 </div>
             </template>
         </div>
+        <pre>{{form}}</pre>
     </AppLayout>
 </template>
 <script setup>
@@ -52,12 +60,10 @@ import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     data: Array,
-    columns: Array,
+    columns: Array | Object,
     label: String,
     routeName: String
 })
-
-console.log(props.columns)
 
 const form = useForm((props.columns.length ? props.columns : [props.columns]).reduce(
     (older, newer) => {
