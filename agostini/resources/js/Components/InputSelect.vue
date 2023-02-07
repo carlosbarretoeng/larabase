@@ -25,7 +25,7 @@
                         leaveTo="opacity-0"
                         @after-leave="query = ''"
                     >
-                        <ComboboxOptions class="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-gray-50 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none text-sm">
+                        <ComboboxOptions class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-gray-50 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none text-sm">
                             <div v-if="filteredPeople.length === 0 && query !== ''" class="relative cursor-default select-none py-2 px-4">
                                 Não Localizado
                             </div>
@@ -83,7 +83,7 @@ const props = defineProps({
     }
 });
 
-let selected = ref(null)
+let selected = ref(props.modelValue ?? null)
 let query = ref('')
 
 let filteredPeople = computed(() => {

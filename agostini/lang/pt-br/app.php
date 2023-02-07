@@ -3,6 +3,7 @@
 return [
     'models' => [
         'user' => [
+            'id' => 'Id',
             'name' => 'Nome',
             'username' => 'Usuário',
             'password' => 'Senha',
@@ -14,6 +15,15 @@ return [
             'id' => 'ID',
             'name' => 'Nome',
             'usuarios_por_empresa' => '# Usuários'
+        ],
+        'motivosdeparada' => [
+            'id' => 'Id',
+            'name' => 'Nome'
+        ],
+        'departamentos' => [
+            'id' => 'Id',
+            'empresa' => 'Empresa',
+            'name' => 'Nome'
         ]
     ]
 ];

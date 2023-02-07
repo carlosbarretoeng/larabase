@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('empresas', function (Blueprint $table) {
+        Schema::create('estacao_de_trabalhos', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->foreignIdFor(App\Models\Departamentos::class);
+            $table->string('name');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('empresas');
+        Schema::dropIfExists('estacao_de_trabalhos');
     }
 };

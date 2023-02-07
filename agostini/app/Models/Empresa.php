@@ -13,11 +13,16 @@ class Empresa extends ModelCrud
     ];
 
     function getUsuariosPorEmpresaAttribute(){
-        return User::query()->where('empresa_id', $this->attributes['id'])->count();
+        $id = $this->attributes['id'] ?? null;
+        if(is_null($id)){
+            return 0;
+        }
+        $val = User::where('empresa_id', $id)->count() ?? 0;
+        return $val;
     }
 
-    public function usuarios()
-    {
-        return $this->hasMany(User::class);
-    }
+//    public function usuarios()
+//    {
+//        return $this->hasMany(User::class);
+//    }
 }

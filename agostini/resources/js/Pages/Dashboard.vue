@@ -1,7 +1,8 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import DashboardStats from "../Partials/DashboardStats.vue";
-import DashboardCharts_TempmoParadao from '../Partials/DashboardCharts_TempoParado.vue';
+import DashboardLineChart from "../Partials/DashboardLineChart.vue";
+import DashboardPieChart from "../Partials/DashboardPieChart.vue";
 
 import {
     Disclosure,
@@ -37,6 +38,12 @@ const center = {lat: -21.12, lng: -42.942778};
                                 <DashboardStats :request="route('dashboard.stats',{ metric: 'Stats_OrdensDeProducao' })" title="Ordens de Produção"/>
                             </div>
                         </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <DashboardPieChart :request="route('dashboard.stats',{ metric: 'Stats_EstacaoDeTrabalho' })" title="Motivos de Parada"/>
+                        </div>
+                        <div class="col-span-12 sm:col-span-8">
+                            <DashboardLineChart :request="route('dashboard.stats',{ metric: 'Stats_EstacaoDeTrabalho' })" title="Tempo médio de produção"/>
+                        </div>
                     </div>
                 </DisclosurePanel>
             </Disclosure>
@@ -62,15 +69,7 @@ const center = {lat: -21.12, lng: -42.942778};
                 </DisclosureButton>
                 <DisclosurePanel class="bg-white border-x border-b border-gray-200 p-2">
                     <div class="grid grid-cols-12 gap-2">
-                        <div class="col-span-12 sm:col-span-2">
-                            <div class="grid grid-cols-2 gap-2">
-                                <DashboardStats :request="route('dashboard.stats',{ metric: 'Stats_EstacaoDeTrabalho' })" title="Estação de Trabalho"/>
-                                <DashboardStats :request="route('dashboard.stats',{ metric: 'Stats_Maquinario' })" title="Maquinário"/>
-                                <DashboardStats :request="route('dashboard.stats',{ metric: 'Stats_Produtos' })" title="Produtos"/>
-                                <DashboardStats :request="route('dashboard.stats',{ metric: 'Stats_OrdensDeProducao' })" title="Ordens de Produção"/>
-                            </div>
-                        </div>
-                        <div class="col-span-12 sm:col-span-10">
+                        <div class="col-span-12 sm:col-span-11" >
                             <GoogleMap
                                 api-key="AIzaSyCd5JyXSm75o19Mu2UUQpd2corAqLtDBz0"
                                 style="width: 100%; height: 500px"

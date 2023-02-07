@@ -14,9 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->default('');
             $table->foreignIdFor(App\Models\Empresa::class)->nullable();
-            $table->softDeletes();
         });
     }
 

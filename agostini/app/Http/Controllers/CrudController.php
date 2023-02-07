@@ -16,20 +16,11 @@ class CrudController extends Controller
     protected $edit_page = 'Crud/Edit';
     protected $model_columns = null;
 
-    public function __construct()
-    {
-        if (empty($this->entity)) {
-            throw new \Error("Entity not defined");
-        }
-        $array = explode('\\', strtolower($this->entity));
-        $this->routeName = end($array);
-    }
-
     protected function populateColumns($column): array
     {
         $arr = [
             'label' => '',
-            'translate' => 'A',
+            'translate' => '',
             'type' => 'string',
             'store' => true,
             'showInIndex' => [
@@ -46,7 +37,8 @@ class CrudController extends Controller
     protected function getCrudInfos($context)
     {
         $columns = [];
-        $columnsNames = array_keys($this->entity::first()->toArray());
+        // $columnsNames = array_keys($this->entity::first()->toArray());
+        $columnsNames = (new $this->entity())->toArray();
         foreach ($columnsNames as $columnsName) {
             $columns[$columnsName] = $this->populateColumns([
                 'label' => $columnsName,
@@ -62,6 +54,7 @@ class CrudController extends Controller
             $columns = array_filter($columns, function ($column) use ($model_columns_filtered_names) {
                 return in_array($column['label'], $model_columns_filtered_names);
             });
+
             foreach ($model_columns_filtered as $mcf) {
                 if (!isset($columns[$mcf['label']])) {
                     $columns[$mcf['label']] = array_merge($this->populateColumns([
@@ -69,9 +62,11 @@ class CrudController extends Controller
                         'translate' => __(strtolower(str_replace('\\', '.', $this->entity)) . '.' . $mcf['label'])
                     ]), $mcf);
                 }else{
+                    $mcf['translate'] = __(strtolower(str_replace('\\', '.', $this->entity)) . '.' . $mcf['label']);
                     $columns[$mcf['label']] = $mcf;
                 }
             }
+
             $orderLabels = array_column($model_columns_filtered, 'label');
             $newCols = [];
             foreach ($orderLabels as $orderLabel) {
@@ -104,12 +99,6 @@ class CrudController extends Controller
         return Inertia::render($this->index_page, $data);
     }
 
-    public function index()
-    {
-        $data = $this->getIndexData();
-        return $this->responseIndex($data);
-    }
-
     protected function getCreateData($id = null)
     {
         $queryData = is_null($id) ? [] : $this->entity::query()->where('id', $id)->paginate(5)->toArray();
@@ -124,6 +113,25 @@ class CrudController extends Controller
         return Inertia::render($this->edit_page, $data);
     }
 
+    protected function validateRequest(Request $request, $context = null){
+        if(is_null($context)) return $request;
+    }
+
+    public function __construct()
+    {
+        if (empty($this->entity)) {
+            throw new \Error("Entity not defined");
+        }
+        $array = explode('\\', strtolower($this->entity));
+        $this->routeName = end($array);
+    }
+
+    public function index()
+    {
+        $data = $this->getIndexData();
+        return $this->responseIndex($data);
+    }
+
     public function create()
     {
         $data = $this->getCreateData();
@@ -132,6 +140,8 @@ class CrudController extends Controller
 
     public function store(Request $request)
     {
+        $request = $this->
+        validateRequest(Request $request, $context = null)
         $attrs = $request->all();
         $model = new $this->entity;
         $columnsToStore = array_filter($this->model_columns, function ($column) {
@@ -140,8 +150,8 @@ class CrudController extends Controller
         foreach ($columnsToStore as $column) {
             $key = $column['label'];
             $value = $attrs[$column['label']];
-            if ($column['type'] === 'select') {
-                continue;
+            if (isset($column['type']) && $column['type'] === 'select') {
+                $value = $value['id'];
             }
             $model[$key] = $value;
         }
@@ -151,18 +161,32 @@ class CrudController extends Controller
 
     public function show($id)
     {
-        $data = $this->getCreateData($id);
-        return $this->responseCreate($data);
+        //
     }
 
     public function edit($id)
     {
-        //
+        $data = $this->getCreateData($id);
+        return $this->responseCreate($data);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $attrs = $request->all();
+        $model = $this->entity::find($id);
+        $columnsToStore = array_filter($this->model_columns, function ($column) {
+            return $column['store'];
+        });
+        foreach ($columnsToStore as $column) {
+            $key = $column['label'];
+            $value = $attrs[$column['label']];
+            if (isset($column['type']) && $column['type'] === 'select') {
+                $value = $value['id'];
+            }
+            $model[$key] = $value;
+        }
+        $model->save();
+        return Redirect::route($this->routeName . '.index');
     }
 
     protected function executeDestroy($id)

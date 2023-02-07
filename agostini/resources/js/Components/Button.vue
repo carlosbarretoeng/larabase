@@ -47,11 +47,7 @@ const props = defineProps({
 })
 
 const calculatedClass= {
-    'rounded-lg': true,
-    'focus:outline-none': true,
-    'uppercase': true,
-    'font-bold': true,
-    'text-center': true,
+    'rounded-lg focus:outline-none uppercase font-bold flex items-center justify-center text-center': true,
     ...calculateBackgroundColor(),
     ...calculateTextColor(),
     ...calculateTextSize()

@@ -6,9 +6,9 @@
                 {{ label }}
             </div>
             <div class="flex flex-row">
-                <a :href="route(routeName + '.create')" type="button" class="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
-                    <PlusCircleIcon  class="w-5 h-5 mr-2 -ml-1"/>
-                    <div class="flex items-center justify-center">Adicionar</div>
+                <a :href="route(routeName + '.create')" type="button" class="text-white min-w-[60px] bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
+                    <PlusCircleIcon  class="w-5 h-5 sm:mr-2 sm:-ml-1"/>
+                    <div class="hidden sm:inline-flex flex items-center justify-center">Adicionar</div>
                 </a>
             </div>
         </div>
@@ -21,7 +21,6 @@
                         &nbsp;
                     </th>
                     <th v-for="(column, column_index) in columns" :key="column_index" scope="col" :style="calculateColumnStyle(column)" class="px-6 py-3 border-r">
-<!--                        {{ Object.values(column)[0]['label'] ?? column }}-->
                         {{ column['translate'] ?? column['label'] }}
                     </th>
                 </tr>
@@ -30,7 +29,7 @@
                 <tr v-for="(datum, datum_index) in data" :key="datum_index" class="bg-white border-b">
                     <td class="w-1 p-2 border-r">
                         <div class="inline-flex rounded-md shadow-sm" role="group">
-                            <a :href="route(routeName + '.show', datum['id'])" type="button" class="px-2 py-1 w-10 inline-flex items-center text-sm bg-transparent border rounded-l-lg hover:bg-blue-500 hover:text-white">
+                            <a :href="route(routeName + '.edit', datum['id'])" type="button" class="px-2 py-1 w-10 inline-flex items-center text-sm bg-transparent border rounded-l-lg hover:bg-blue-500 hover:text-white">
                                 <PencilSquareIcon class="w-full h-full"/>
                             </a>
                             <button type="button" @click="openModal(datum)" class="px-2 w-10 inline-flex items-center text-sm bg-transparent border rounded-r-lg hover:bg-red-500 hover:text-white">
@@ -130,7 +129,6 @@
                 </div>
             </Dialog>
         </TransitionRoot>
-        <pre>{{ props }}</pre>
     </AppLayout>
 </template>
 <script setup>

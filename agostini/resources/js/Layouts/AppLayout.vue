@@ -18,23 +18,49 @@ const menus = _.compact([
         'label': 'Início',
         'href': route('dashboard')
     },
-    AuthUtil.isSuperAdminisitrador() && {
+    {
         'label': 'Sistema',
         'href': route('dashboard'),
-        'children': [
-            {
+        'children': _.compact([
+            AuthUtil.isSuperAdminisitrador() && {
                 'label': 'Empresas',
                 'href': route('empresa.index')
             },
-            {
+            AuthUtil.isSuperAdminisitrador() && {
                 'label': 'Usuários',
                 'href': route('user.index')
             },
-        ]
+            AuthUtil.isSuperAdminisitrador() && {
+                'label': 'Motivos de Paradas',
+                'href': route('motivosdeparada.index')
+            },
+            {
+                'label': 'Departamentos',
+                'href': route('departamentos.index')
+            },
+        ])
     },
     {
         'label': 'Produção',
         'href': route('dashboard'),
+        'children': [
+            {
+                'label': 'Estações de Trabalho',
+                'href': route('empresa.index')
+            },
+            {
+                'label': 'Maquinário',
+                'href': route('empresa.index')
+            },
+            {
+                'label': 'Produtos',
+                'href': route('empresa.index')
+            },
+            {
+                'label': 'Ordens de Produção',
+                'href': route('empresa.index')
+            },
+        ]
     },
     {
         'label': 'Custos',
@@ -68,14 +94,14 @@ const logout = () => {
                 </a>
                 <div class="hidden sm:inline-flex flex items-center border-r border-white pr-4 mr-4 gap-2">
                     <template v-for="(menu, menu_index) in menus" :key="menu_index">
-                        <Button v-if="!menu.children?.length" class="uppercase font-bold" :to="menu.href">{{ menu.label }}</Button>
+                        <Button v-if="!menu.children?.length" size="xs" class="uppercase font-bold" :to="menu.href">{{ menu.label }}</Button>
                         <Menu v-else>
                             <MenuButton class="uppercase font-bold">
-                                <Button>{{ menu.label }}</Button>
+                                <Button size="xs">{{ menu.label }}</Button>
                             </MenuButton>
-                            <MenuItems class="absolute top-16 left-0 w-full bg-blue-500 grid grid-cols-5 gap-4 p-2 pt-2 z-50">
+                            <MenuItems class="absolute top-16 left-0 w-full min-h-full bg-blue-500 grid grid-cols-8 gap-4 p-2 pt-2 z-50">
                                 <MenuItem v-for="(submenu, submenu_index) in menu.children" :key="submenu_index" as="template" v-slot="{ active }">
-                                    <Button flat outlined :label="submenu.label" :to="submenu.href"/>
+                                    <Button flat outlined size="xs" :label="submenu.label" :to="submenu.href"/>
                                 </MenuItem>
                             </MenuItems>
                         </Menu>
@@ -100,9 +126,12 @@ const logout = () => {
                                     <MenuButton class="px-2 uppercase font-bold">
                                         <Button size="xs" class=" w-full">{{ menu.label }}</Button>
                                     </MenuButton>
-                                    <MenuItems class="w-full grid grid-cols-1 gap-4 p-2">
-                                        <MenuItem v-for="(submenu, submenu_index) in menu.children" :key="submenu_index" as="template" v-slot="{ active }">
-                                            <Button size="xs" flat outlined :label="submenu.label" :to="submenu.href"/>
+                                    <MenuItems class="w-full grid grid-cols-2 py-2 px-3 text-center">
+                                        <MenuItem v-for="(submenu, submenu_index) in menu.children" :key="submenu_index" as="div" v-slot="{ active }">
+<!--                                            <Button size="xs" flat outlined :label="submenu.label" :to="submenu.href"/>-->
+                                            <div class="w-full flex p-1">
+                                                <a :href="submenu.href" class=" flex-grow rounded-lg focus:outline-none uppercase font-bold text-center bg-white border-2 border-blue-500 text-blue-500 text-xs p-1">{{ submenu.label }}</a>
+                                            </div>
                                         </MenuItem>
                                     </MenuItems>
                                 </Menu>
@@ -110,12 +139,6 @@ const logout = () => {
                             </div>
 
                             <hr class="sm:hidden my-1 border-white "/>
-                            <MenuItem v-slot="{ active }">
-                                <Button size="xs" @click="logout">
-                                    Meu Perfil
-                                </Button>
-                            </MenuItem>
-                            <hr class="my-1 border-white "/>
                             <MenuItem v-slot="{ active }">
                                 <Button size="xs" @click="logout">
                                     Sair

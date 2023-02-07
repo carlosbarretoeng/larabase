@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Empresa;
+use App\Models\MotivosDeParada;
 use App\Models\User;
 use Faker\Factory;
 use App\Models\UsuarioPorEmpresa;
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         Role::create(['name' => 'super-administrador']);
         Role::create(['name' => 'administrador']);
+        Role::create(['name' => 'colaborador']);
 
         Empresa::factory()->create([
             'name' => 'Agostini Consultoria'
@@ -33,10 +35,26 @@ class DatabaseSeeder extends Seeder
             'username' => 'super-admin',
             'email' => 'super-admin@agostinitecnologia.com.br',
             'empresa_id' => 1,
-        ])->assignRole('super-administrador')->assignRole('administrador');
+        ])->assignRole('super-administrador');
 
-        Empresa::factory(3)->create();
+        User::factory()->create([
+            'name' => 'Administrador',
+            'username' => 'admin',
+            'email' => 'admin@agostinitecnologia.com.br',
+            'empresa_id' => 1,
+        ])->assignRole('administrador');
 
-        User::factory(19)->create();
+        User::factory()->create([
+            'name' => 'Colaborador',
+            'username' => 'colab',
+            'email' => 'colab@agostinitecnologia.com.br',
+            'empresa_id' => 1,
+        ])->assignRole('colaborador');
+
+        MotivosDeParada::create(['name' => 'Fim do Expediente']);
+        MotivosDeParada::create(['name' => 'Banheiro']);
+        MotivosDeParada::create(['name' => 'Manutenção']);
+        MotivosDeParada::create(['name' => 'Almoço']);
+        MotivosDeParada::create(['name' => 'Buscar Peças/Material']);
     }
 }

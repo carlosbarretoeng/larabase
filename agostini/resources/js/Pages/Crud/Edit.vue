@@ -6,19 +6,21 @@
                 {{ label }}
             </div>
             <div class="flex flex-row gap-2">
-                <a :href="route(routeName + '.index')" type="button" class="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
-                    <ArrowLeftCircleIcon class="w-5 h-5 mr-2 -ml-1"/>
-                    <div class="flex items-center justify-center">Voltar</div>
+                <a :href="route(routeName + '.index')" type="button"
+                   class="text-white min-w-[60px] bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
+                    <ArrowLeftCircleIcon class="w-5 h-5 sm:mr-2 sm:-ml-1"/>
+                    <div class="hidden sm:inline-flex flex items-center justify-center">Voltar</div>
                 </a>
-                <button @click="save()" type="button" class="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
-                    <InboxArrowDownIcon class="w-5 h-5 mr-2 -ml-1"/>
-                    <div class="flex items-center justify-center">Salvar</div>
+                <button @click="save()" type="button"
+                        class="text-white min-w-[60px] bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 text-center inline-flex items-center">
+                    <InboxArrowDownIcon class="w-5 h-5 sm:mr-2 sm:-ml-1"/>
+                    <div class="hidden sm:inline-flex flex items-center justify-center">Salvar</div>
                 </button>
             </div>
         </div>
 
-        <div class="p-4 grid grid-cols-12 gap-2">
-            <template v-for="(column, column_index) in columns" :key="column_index" >
+        <div class="p-4 grid grid-cols-2 sm:grid-cols-12 gap-2">
+            <template v-for="(column, column_index) in columns" :key="column_index">
                 <div class="col-span-2">
                     <template v-if="column.type == 'select'">
                         <InputSelect
@@ -28,7 +30,7 @@
                             @update="setFormValue($event, column.label)"
                         />
                     </template>
-                    <template v-if="column.type == 'password'">
+                    <template v-else-if="column.type == 'password'">
                         <InputText
                             type="password"
                             :label="column.translate"
@@ -44,18 +46,16 @@
                 </div>
             </template>
         </div>
-        <pre>{{form}}</pre>
     </AppLayout>
 </template>
 <script setup>
-import _ from 'lodash';
-import { ref } from 'vue';
+import {ref} from 'vue';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Button from "@/Components/Button.vue";
-import { ArrowLeftCircleIcon, InboxArrowDownIcon  } from '@heroicons/vue/20/solid'
+import {ArrowLeftCircleIcon, InboxArrowDownIcon} from '@heroicons/vue/20/solid'
 import InputText from "../../Components/InputText.vue";
 import InputSelect from "../../Components/InputSelect.vue";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
@@ -65,21 +65,44 @@ const props = defineProps({
     routeName: String
 })
 
-const form = useForm((props.columns.length ? props.columns : [props.columns]).reduce(
-    (older, newer) => {
-        const key = Object.keys(Object.values(newer)[0]);
-        const opt = Object.values(newer)[0];
-        const value = props.data ? props.data[0][key] : '';
-        older[key] = ref(value)
-        return older;
-    }, {}
-));
+const form = useForm(Object.keys(props.columns).map((el, el_idx, el_arr) => {
+    let obj = {};
+    let value = props.data ? (props.data[0][el] ?? null) : null;
+
+    if(Array.isArray(value)) value = value.pop();
+    if(typeof value === 'object' && value !== null) value = {id: value.id, name: value.name};
+    // if(value?.id !== undefined && value?.name !== undefined) value = {id: value.id, name: value.name}
+
+    obj[el] = ref(value);
+    return obj
+}).reduce((older, newer) => ({...older, ...newer}), {}) ?? {});
 
 const setFormValue = (value, column) => {
     form[column] = value
 }
 
 const save = () => {
-    console.log(Inertia.post(route(props.routeName + '.store'), form));
+    const page = (usePage()).url.value.split('/');
+    if(page[page.length - 1] === 'create'){
+        Inertia.post(
+            route(props.routeName + '.store'),
+            form,
+            {
+                onFinish: visit => {
+                    console.log(visit.data)
+                },
+            }
+        );
+    }else {
+        Inertia.put(
+            route(props.routeName + '.update', props.data[0].id),
+            form,
+            {
+                onFinish: visit => {
+                    console.log(visit.data)
+                },
+            }
+        );
+    }
 }
 </script>
