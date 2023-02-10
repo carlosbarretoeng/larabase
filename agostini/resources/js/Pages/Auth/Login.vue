@@ -11,7 +11,7 @@
                 </div>
                 <template v-slot:actions>
                     <Button label="Acessar" class="col-span-3" @click="submit()"/>
-                    <Button secondary label="Registrar" class="col-span-3" />
+                    <!--<Button secondary label="Registrar" class="col-span-3" />-->
                 </template>
             </Card>
         </div>

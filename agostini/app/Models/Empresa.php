@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Empresa extends ModelCrud
 {
@@ -21,8 +23,11 @@ class Empresa extends ModelCrud
         return $val;
     }
 
-//    public function usuarios()
-//    {
-//        return $this->hasMany(User::class);
-//    }
+    public function newQuery(): Builder
+    {
+        echo "<pre>";
+        dd(Auth::user());
+        echo "</pre><hr/>";
+        return parent::newQuery();
+    }
 }

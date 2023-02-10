@@ -87,7 +87,7 @@ class CrudController extends Controller
 
     protected function getIndexData()
     {
-        $queryData = $this->entity::query()->paginate(5)->toArray();
+        $queryData = $this->entity::query()->paginate(env('BI_PAGINATE', 5))->toArray();
         return array_merge(
             $queryData,
             $this->getCrudInfos('Index')
@@ -101,7 +101,7 @@ class CrudController extends Controller
 
     protected function getCreateData($id = null)
     {
-        $queryData = is_null($id) ? [] : $this->entity::query()->where('id', $id)->paginate(5)->toArray();
+        $queryData = is_null($id) ? [] : $this->entity::query()->where('id', $id)->paginate(env('BI_PAGINATE', 5))->toArray();
         return array_merge(
             $queryData,
             $this->getCrudInfos('Edit')
@@ -113,8 +113,22 @@ class CrudController extends Controller
         return Inertia::render($this->edit_page, $data);
     }
 
-    protected function validateRequest(Request $request, $context = null){
-        if(is_null($context)) return $request;
+    protected function populateAttributesForStore(Request $request){
+        $attrs = $request->all();
+        $model = [];
+        $columnsToStore = array_filter($this->model_columns, function ($column) {
+            return $column['store'];
+        });
+        foreach ($columnsToStore as $column) {
+            $key = $column['label'];
+            $value = $attrs[$column['label']];
+            if (isset($column['type']) && $column['type'] === 'select') {
+                $key .= '_id';
+                $value = $value['id'];
+            }
+            $model[$key] = $value;
+        }
+        return $model;
     }
 
     public function __construct()
@@ -140,22 +154,26 @@ class CrudController extends Controller
 
     public function store(Request $request)
     {
-        $request = $this->
-        validateRequest(Request $request, $context = null)
-        $attrs = $request->all();
+        $attrs = $this->populateAttributesForStore($request);
         $model = new $this->entity;
-        $columnsToStore = array_filter($this->model_columns, function ($column) {
-            return $column['store'];
-        });
-        foreach ($columnsToStore as $column) {
-            $key = $column['label'];
-            $value = $attrs[$column['label']];
-            if (isset($column['type']) && $column['type'] === 'select') {
-                $value = $value['id'];
-            }
+        foreach ($attrs as $key => $value){
             $model[$key] = $value;
         }
         $model->save();
+//        $attrs = $request->all();
+//        $model = new $this->entity;
+//        $columnsToStore = array_filter($this->model_columns, function ($column) {
+//            return $column['store'];
+//        });
+//        foreach ($columnsToStore as $column) {
+//            $key = $column['label'];
+//            $value = $attrs[$column['label']];
+//            if (isset($column['type']) && $column['type'] === 'select') {
+//                $value = $value['id'];
+//            }
+//            $model[$key] = $value;
+//        }
+//        $model->save();
         return Redirect::route($this->routeName . '.index');
     }
 
